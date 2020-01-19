@@ -14,7 +14,7 @@
 
 
 // Game play
-#define FLAPPWR				10
+#define FLAPPWR				6
 #define GRAVITY				3
 
 

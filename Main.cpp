@@ -26,6 +26,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 	LPCWSTR birdIsBMP = L"Sample bird.bmp";
 
 	LPCWSTR backgroundBMP = L"background.bmp";
+	LPCWSTR GetreadyBMP = L"Getready.bmp";
 
 
 	
@@ -87,6 +88,8 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 	// Textures
 	objectLoader BKG(backgroundBMP, GetDC(hwnd));
 	BKG.bitMapLoader();
+	objectLoader GetReady(GetreadyBMP, GetDC(hwnd));
+	GetReady.bitMapLoader();
 
 	objectLoader poleTop(poleTopBMP, GetDC(hwnd));
 	poleTop.bitMapLoader();
@@ -96,6 +99,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 	birdUp.bitMapLoader();
 	objectLoader birdDown(birdNotBMP, GetDC(hwnd));
 	birdDown.bitMapLoader();
+
 
 	// play variables
 	bool alive = true;
@@ -133,8 +137,10 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 
 			alive = true;
 			start = true;
+			GetReady.bitMapRender(0, 0);
+			Sleep(1000);
 			renderBird(bird, birdDown);
-			Sleep(100);
+			
 		}
 
 		
@@ -191,7 +197,14 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		if (FLAP)
 		{
 			renderBird(bird, birdUp);
-			bird.ySpeed = 0-FLAPPWR;
+			if (bird.ySpeed < 0)
+			{
+				bird.ySpeed = bird.ySpeed - FLAPPWR;
+			}
+			else
+			{
+				bird.ySpeed = 0 - FLAPPWR;
+			}
 		}
 		else
 		{

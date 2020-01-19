@@ -151,6 +151,7 @@
   <ItemGroup>
     <Image Include="background.bmp" />
     <Image Include="bottompole.bmp" />
+    <Image Include="Getready.bmp" />
     <Image Include="Sample bird.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

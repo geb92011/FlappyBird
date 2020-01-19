@@ -49,5 +49,8 @@
     <Image Include="bottompole.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Getready.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
