@@ -39,4 +39,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="background.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sample bird.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="bottompole.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

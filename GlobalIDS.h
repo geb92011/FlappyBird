@@ -2,15 +2,15 @@
 
 
 #define WINDX			1000
-#define WINDY			1000
+#define WINDY			700
 
 #define INITSPEED			50
 #define BIRDX				300
-#define WAITTIME			10
+#define WAITTIME			50
 
 // Change for real bird
-#define BIRDHIGHT			150
-#define BIRDWIDTH			100
+#define BIRDHIGHT			148
+#define BIRDWIDTH			96
 
 
 // Game play

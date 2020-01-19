@@ -19,12 +19,13 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	// File names
-	LPCWSTR poleTopBMP = L"";
-	LPCWSTR poleBottomBMP = L"";
+	LPCWSTR poleTopBMP = L"bottompole.bmp";
+	LPCWSTR poleBottomBMP = L"bottompole.bmp";
 
-	LPCWSTR birdNotBMP = L"";
-	LPCWSTR birdIsBMP = L"";
-	LPCWSTR backgroundBMP = L"";
+	LPCWSTR birdNotBMP = L"Sample bird.bmp";
+	LPCWSTR birdIsBMP = L"Sample bird.bmp";
+
+	LPCWSTR backgroundBMP = L"background.bmp";
 
 
 	
@@ -62,8 +63,8 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		WS_OVERLAPPEDWINDOW,            // Window style
 
 		// Size and position
+		0, 0,
 		WINDX, WINDY,
-		CW_USEDEFAULT, CW_USEDEFAULT,
 
 		NULL,       // Parent window    
 		NULL,       // Menu
@@ -135,8 +136,8 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		}
 
 		BKG.bitMapRender(0, 0);
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		/*TranslateMessage(&msg);
+		DispatchMessage(&msg);*/
 		
 
 		// Keep the pole array small
@@ -215,10 +216,12 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 					alive = false;
 				}
 			}
-			
-			
 		}
 
+		if (bird.y <= 0 || bird.y >= 600)
+		{
+			alive = false;
+		}
 			
 		
 		// When dies
