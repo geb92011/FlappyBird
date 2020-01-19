@@ -128,14 +128,16 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 
 			bird.x = BIRDX;
 			bird.y = 100;
-			bird.ySpeed = -10;
+			bird.ySpeed = -1;
 			bird.xSpeed = INITSPEED;
 
 			alive = true;
 			start = true;
+			renderBird(bird, birdDown);
+			Sleep(100);
 		}
 
-		BKG.bitMapRender(0, 0);
+		
 		/*TranslateMessage(&msg);
 		DispatchMessage(&msg);*/
 		
@@ -171,7 +173,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 
 
 
-
+		BKG.bitMapRender(0, 0);
 		// Render poles
 		for (int i = 0; i < poleCtr; i++)
 		{

@@ -14,8 +14,8 @@
 
 
 // Game play
-#define FLAPPWR				20
-#define GRAVITY				20
+#define FLAPPWR				10
+#define GRAVITY				3
 
 
 // Change for actual bmp
