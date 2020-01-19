@@ -20,7 +20,7 @@ struct poleData
 {
 	// True = top
 	// False = bottom
-	bool side;
+	int yDif;
 
 	int xStart;
 	int xEnd;

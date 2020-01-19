@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-int generatePole();
+poleData generatePole();
 
 void renderPole(poleData, objectLoader);
 void renderBird(pos, objectLoader);
@@ -10,7 +10,7 @@ pos updateBird(pos, int);
 poleData updatePole(poleData, int);
 
 // Globals
-int HIGHT = 0;
+
 
 bool FLAP = false;
 
@@ -20,7 +20,6 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 {
 	// File names
 	LPCWSTR poleTopBMP = L"bottompole.bmp";
-	LPCWSTR poleBottomBMP = L"bottompole.bmp";
 
 	LPCWSTR birdNotBMP = L"Sample bird.bmp";
 	LPCWSTR birdIsBMP = L"Sample bird.bmp";
@@ -81,7 +80,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 	/*SetWindowPos(hwnd, HWND_TOPMOST, 0, 0,
 		WINDX, WINDY;*/
 
-	HIGHT = WINDY;
+	
 	// Show the window
 	ShowWindow(hwnd, nCmdShow);
 
@@ -93,8 +92,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 
 	objectLoader poleTop(poleTopBMP, GetDC(hwnd));
 	poleTop.bitMapLoader();
-	objectLoader poleBottom(poleBottomBMP, GetDC(hwnd));
-	poleBottom.bitMapLoader();
+	
 	objectLoader birdUp(birdIsBMP, GetDC(hwnd));
 	birdUp.bitMapLoader();
 	objectLoader birdDown(birdNotBMP, GetDC(hwnd));
@@ -114,6 +112,21 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 	int score = 0;
 	int speed;
 	clock_t endWait;
+
+	clock_t initWait;
+
+
+	// Pole stuff
+	int poleInterval;
+
+	clock_t timeToNext;
+	timeToNext = clock();
+
+	bool poleGenStat;
+
+	int curentGen;
+
+	bool rational;
 	// Initialize the first position
 	/*turns.push_back(position());*/
 
@@ -140,7 +153,15 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 			GetReady.bitMapRender(0, 0);
 			Sleep(1000);
 			renderBird(bird, birdDown);
-			
+
+			// Timing for poles
+			initWait = clock() + TIMEBEFOREPOLE;
+			poleGenStat = false;
+			poleInterval = INITPOLE;
+
+			curentGen = 0;
+			rational = false;
+			timeToNext = clock();
 		}
 
 		
@@ -155,6 +176,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 			{
 				Poles.erase(Poles.begin()+i);
 				poleCtr--;
+				curentGen--;
 			}
 		}
 
@@ -166,6 +188,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		{
 			Poles[i] = updatePole(Poles[i], speed);
 		}
+
 
 		// Get keystroke
 		endWait = clock() + WAITTIME;
@@ -179,18 +202,40 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 
 
 
+		// wait to gen first pole
+		if (initWait <= clock())
+		{
+			poleGenStat = true;
+			
+		}
+
+
+
+
+		// Get new pole
+		if (poleGenStat)
+		{
+			if (timeToNext <= clock())
+			{
+				
+				Poles.push_back(poleData());
+				Poles[poleCtr] = generatePole();
+				
+				poleCtr++;
+				timeToNext = clock() + poleInterval;
+				
+			}
+		}
+
+
+
 		BKG.bitMapRender(0, 0);
 		// Render poles
 		for (int i = 0; i < poleCtr; i++)
 		{
-			if (Poles[i].side)
-			{
+			
 				renderPole(Poles[i], poleTop);
-			}
-			else
-			{
-				renderPole(Poles[i], poleBottom);
-			}
+			
 		}
 		
 		// render bird
@@ -221,19 +266,16 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		{
 			if (bird.x + BIRDWIDTH >= Poles[i].xStart && bird.x <= Poles[i].xEnd)
 			{
-				if (Poles[i].side && bird.y <= Poles[i].y)
+				if (bird.y + BIRDHIGHT >= Poles[i].y || bird.y <= (Poles[i].y - Poles[i].yDif))
 				{
 					alive = false;
 				}
 
-				if (!Poles[i].side && bird.y + BIRDHIGHT >= Poles[i].y)
-				{
-					alive = false;
-				}
+				
 			}
 		}
 
-		if (bird.y <= 0 || bird.y >= 600)
+		if (bird.y <= -50 || bird.y + BIRDHIGHT >= 600)
 		{
 			alive = false;
 		}
@@ -312,41 +354,35 @@ pos updateBird(pos old, int score)
 
 
 // Randomly generats a pole
-int generatePole()
+poleData generatePole()
 {
-	double random;
-	bool rational = false;
-	while (!rational)
-	{
-		
-		random = std::rand() / RAND_MAX;
+	poleData newPole;
 
-		random = random * HIGHT;
+	// Get y
+	/*double random;
+	random = std::rand() / RAND_MAX;
+	random = random * WINDY + 150;*/
 
-		if (random-50 <= HIGHT)
-		{
-			rational = true;
-		}
+	newPole.y = rand() % WINDY + 100;
+	
+	/*random = std::rand() / RAND_MAX;
+	random = random * MAXSEPERATION;*/
 
-	}
-	return (int)random;
+	newPole.yDif = rand() % MAXSEPERATION + 100;
+
+	newPole.xStart = WINDX;
+	newPole.xEnd = WINDX + POLEWIDTH;
+
+	return newPole;
 }
 
 // Renders the pole
 void renderPole(poleData position, objectLoader pole)
 {
-	int yPos;
-	if (position.side)
-	{
-		yPos = position.y - POLEHIGHT;
-	}
-	else
-	{
-		yPos = position.y;
-	}
+	
 
-
-	pole.bitMapRender(position.xStart, yPos);
+	pole.bitMapRender(position.xStart, position.y);
+	pole.bitMapRender(position.xStart, (position.y - position.yDif - POLEHIGHT));
 }
 
 // Renders the bird
