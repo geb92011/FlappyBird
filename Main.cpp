@@ -6,17 +6,21 @@ void renderPole(poleData, objectLoader);
 void renderBird(pos, objectLoader);
 
 
+pos updateBird(pos, int);
+poleData updatePole(poleData, int);
 
 // Globals
 int HIGHT = 0;
 
+bool FLAP = false;
 
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	// File names
-	LPCWSTR poleBMP = L"";
+	LPCWSTR poleTopBMP = L"";
+	LPCWSTR poleBottomBMP = L"";
 
 	LPCWSTR birdNotBMP = L"";
 	LPCWSTR birdIsBMP = L"";
@@ -58,7 +62,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		WS_OVERLAPPEDWINDOW,            // Window style
 
 		// Size and position
-		CW_USEDEFAULT, CW_USEDEFAULT,
+		WINDX, WINDY,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 
 		NULL,       // Parent window    
@@ -72,9 +76,10 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		return 0;
 	}
 
-	SetWindowPos(hwnd, HWND_TOPMOST, 0, 0,
-		GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 0L);
-	HIGHT = GetSystemMetrics(SM_CXSCREEN);
+	/*SetWindowPos(hwnd, HWND_TOPMOST, 0, 0,
+		WINDX, WINDY;*/
+
+	HIGHT = WINDY;
 	// Show the window
 	ShowWindow(hwnd, nCmdShow);
 
@@ -82,8 +87,10 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 	objectLoader BKG(backgroundBMP, GetDC(hwnd));
 	BKG.bitMapLoader();
 
-	objectLoader pole(poleBMP, GetDC(hwnd));
-	pole.bitMapLoader();
+	objectLoader poleTop(poleTopBMP, GetDC(hwnd));
+	poleTop.bitMapLoader();
+	objectLoader poleBottom(poleBottomBMP, GetDC(hwnd));
+	poleBottom.bitMapLoader();
 	objectLoader birdUp(birdIsBMP, GetDC(hwnd));
 	birdUp.bitMapLoader();
 	objectLoader birdDown(birdNotBMP, GetDC(hwnd));
@@ -96,10 +103,17 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 	// Data
 	std::vector<poleData> Poles;
 	int poleCtr = 0;
+
+	// Bird
+	pos bird;
+	int score = 0;
+	int speed;
+	clock_t endWait;
 	// Initialize the first position
 	/*turns.push_back(position());*/
 
-
+	// Get ready
+	Sleep(10000);
 	MSG msg = { 0 };
 	while (GetMessage(&msg, NULL, NULL, NULL))
 	{
@@ -108,8 +122,13 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 			// Initialize all game data
 			Poles.clear();
 			poleCtr = 0;
+			score = 0;
+			speed = INITSPEED;
 
-
+			bird.x = BIRDX;
+			bird.y = 100;
+			bird.ySpeed = -10;
+			bird.xSpeed = INITSPEED;
 
 			alive = true;
 			start = true;
@@ -119,6 +138,87 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		
+
+		// Keep the pole array small
+		for (int i = 0; i < poleCtr; i++)
+		{
+			if (Poles[i].xEnd < 0)
+			{
+				Poles.erase(Poles.begin()+i);
+				poleCtr--;
+			}
+		}
+
+		// Move stuff
+		bird = updateBird(bird, score);
+		speed = bird.xSpeed;
+
+		for (int i = 0; i < poleCtr; i++)
+		{
+			Poles[i] = updatePole(Poles[i], speed);
+		}
+
+		// Get keystroke
+		endWait = clock() + WAITTIME;
+		while (clock() <= endWait)
+		{
+			if (GetAsyncKeyState(VK_SPACE))
+			{
+				FLAP = true;
+			}
+		}
+
+
+
+
+		// Render poles
+		for (int i = 0; i < poleCtr; i++)
+		{
+			if (Poles[i].side)
+			{
+				renderPole(Poles[i], poleTop);
+			}
+			else
+			{
+				renderPole(Poles[i], poleBottom);
+			}
+		}
+		
+		// render bird
+		if (FLAP)
+		{
+			renderBird(bird, birdUp);
+			bird.ySpeed = 0-FLAPPWR;
+		}
+		else
+		{
+			renderBird(bird, birdDown);
+		}
+		FLAP = false;
+
+
+
+
+
+		// Death checker
+		for (int i = 0; i < poleCtr; i++)
+		{
+			if (bird.x + BIRDWIDTH >= Poles[i].xStart && bird.x <= Poles[i].xEnd)
+			{
+				if (Poles[i].side && bird.y <= Poles[i].y)
+				{
+					alive = false;
+				}
+
+				if (!Poles[i].side && bird.y + BIRDHIGHT >= Poles[i].y)
+				{
+					alive = false;
+				}
+			}
+			
+			
+		}
+
 			
 		
 		// When dies
@@ -168,6 +268,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 }
 
+poleData updatePole(poleData old, int speed)
+{
+	poleData updated;
+	updated = old;
+
+	updated.xEnd = old.xEnd - speed;
+	updated.xStart = old.xStart - speed;
+
+	return updated;
+}
+
+
+pos updateBird(pos old, int score)
+{
+	pos updated;
+
+	updated.x = BIRDX;
+	updated.y = old.y + old.ySpeed;
+	updated.ySpeed = old.ySpeed + GRAVITY;
+	updated.xSpeed = INITSPEED + 5*score;
+
+	return updated;
+}
 
 
 // Randomly generats a pole
