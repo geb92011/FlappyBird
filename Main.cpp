@@ -15,6 +15,8 @@ poleData updatePole(poleData, int);
 bool FLAP = false;
 
 
+bool AIStat = false;
+
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -194,6 +196,12 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 		endWait = clock() + WAITTIME;
 		while (clock() <= endWait)
 		{
+			// Checks for ai 
+			if (AIStat)
+			{
+				
+			}
+			// Get human player input
 			if (GetAsyncKeyState(VK_SPACE))
 			{
 				FLAP = true;
@@ -288,6 +296,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 
 
 			start = false;
+			Sleep(2000);
 		}
 	}
 

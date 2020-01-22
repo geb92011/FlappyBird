@@ -21,6 +21,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="nuralNet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="objectLoader.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlobalIDS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nuralNet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

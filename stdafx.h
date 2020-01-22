@@ -26,3 +26,15 @@ struct poleData
 	int xEnd;
 	int y;
 };
+
+
+
+
+// Nural net
+struct net
+{
+	int distScore;
+	int input[INPUTS];
+	int weight1[INPUTS];
+	int bias1[INPUTS];
+};

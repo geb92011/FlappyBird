@@ -25,3 +25,7 @@
 
 // Change for actual bmp
 #define POLEHIGHT			1045
+
+
+// Nural net stuff
+#define INPUTS				5
