@@ -26,10 +26,12 @@ public:
 
 	// Net evaluation
 	bool updateNet(int);
+	
+	void changeValues();
 
 
 private:
-	net CurrnetNet;
+	net CurrentNet;
 	net BestNet;
 
 	int iteration;
