@@ -1,5 +1,26 @@
 #include "nuralNet.h"
 
+nuralNet::nuralNet()
+{
+	CurrentNet.distScore = 0;
+	for (int i = 0; i < INPUTS; i++)
+	{
+		CurrentNet.bias1[i].value = 0;
+		CurrentNet.bias1[i].link = i;
+		CurrentNet.weight1[i].value = 1;
+		CurrentNet.weight1[i].link = 0;
+
+		CurrentNet.input[i].value = 0;
+		CurrentNet.input[i].link = i;
+	}
+	BestNet = CurrentNet;
+}
+
+// Link values
+	// 0 up
+	// top to bottom
+	// input, weight, bias
+
 
 bool nuralNet::getNetAnswer(poleData poles[10], pos bird)
 {
@@ -56,7 +77,7 @@ bool nuralNet::updateNet(int newScore)
 void nuralNet::changeValues()
 {
 	// Chooses the path to modify
-	int choosePath = rand() % INPUTS;
+	int choosePath = rand() % INPUTS; 
 
 	// Chooses the component to modify
 		// weight	bias

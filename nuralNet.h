@@ -24,11 +24,12 @@ public:
 	int getDist(int);
 
 
+	nuralNet();
+
 	// Net evaluation
 	bool updateNet(int);
 	
 	void changeValues();
-
 
 private:
 	net CurrentNet;
