@@ -16,7 +16,8 @@
 #define BIRDWIDTH			100
 
 #define POLEWIDTH			160
-#define MAXSEPERATION		400
+#define MAXSEPERATION		300
+#define GROUND				600
 
 // Game play
 #define FLAPPWR				6

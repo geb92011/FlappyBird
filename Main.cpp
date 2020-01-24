@@ -283,7 +283,7 @@ extern int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR p
 			}
 		}
 
-		if (bird.y <= -50 || bird.y + BIRDHIGHT >= 600)
+		if (bird.y <= -50 || bird.y + BIRDHIGHT >= GROUND)
 		{
 			alive = false;
 		}
@@ -372,12 +372,12 @@ poleData generatePole()
 	random = std::rand() / RAND_MAX;
 	random = random * WINDY + 150;*/
 
-	newPole.y = rand() % WINDY + 100;
+	newPole.y = rand() % GROUND + 200;
 	
 	/*random = std::rand() / RAND_MAX;
 	random = random * MAXSEPERATION;*/
 
-	newPole.yDif = rand() % MAXSEPERATION + 100;
+	newPole.yDif = rand() % MAXSEPERATION + 200;
 
 	newPole.xStart = WINDX;
 	newPole.xEnd = WINDX + POLEWIDTH;

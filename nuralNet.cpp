@@ -49,7 +49,7 @@ bool nuralNet::followPath(int hight, int poleHight, int poleDist, int poleDiff, 
 
 
 
-
+	return true;
 }
 
 
