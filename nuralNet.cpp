@@ -45,13 +45,29 @@ bool nuralNet::getNetAnswer(poleData poles[10], pos bird)
 
 bool nuralNet::followPath(int hight, int poleHight, int poleDist, int poleDiff, int speed)
 {
-	int iReturn;
+	int iReturn = 0;
 
+	CurrentNet.input[0].value = hight;
+	CurrentNet.input[1].value = poleHight;
+	CurrentNet.input[2].value = poleDist;
+	CurrentNet.input[3].value = poleDiff;
+	CurrentNet.input[4].value = speed;
 
+	
+	for (int i = 0; i < INPUTS; i++)
+	{
+		iReturn += followLink(i);
+	}
 
 	return true;
 }
 
+int nuralNet::followLink(int path)
+{
+	return (CurrentNet.input[path].value *
+		CurrentNet.weight1[CurrentNet.input[path].link].value +
+		CurrentNet.bias1[CurrentNet.weight1[path].link].value);
+}
 
 // Net evaluation
 bool nuralNet::updateNet(int newScore)
@@ -66,8 +82,9 @@ bool nuralNet::updateNet(int newScore)
 	else
 	{
 		CurrentNet = BestNet;
-		changeValues();
 	}
+	// Mutate Current
+	changeValues();
 
 
 	return true;
@@ -79,18 +96,23 @@ void nuralNet::changeValues()
 	// Chooses the path to modify
 	int choosePath = rand() % INPUTS; 
 
+	double amount;
 	// Chooses the component to modify
 		// weight	bias
 		// change weight more often than bias
 		// 
 	int chooseComponent = rand() % 100;
+	// Bias
 	if (chooseComponent > 60)
 	{
-		chooseComponent = 2;
+		amount = rand() % BIASLIMIT - 0.5;
+		CurrentNet.bias1[choosePath].value += amount;
 	}
 	else
 	{
-		chooseComponent = 1;
+		// Weight
+		amount = rand() % WEIGHTLIMIT - 1.5;
+		CurrentNet.weight1[choosePath].value += amount;
 	}
 
 

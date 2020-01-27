@@ -30,3 +30,7 @@
 
 // Nural net stuff
 #define INPUTS				5
+
+// Max changes per moment
+#define BIASLIMIT			1
+#define WEIGHTLIMIT			3

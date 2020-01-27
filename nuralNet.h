@@ -19,6 +19,8 @@ public:
 
 	bool followPath(int, int, int, int, int);
 
+	int followLink(int);
+
 	// Returns
 	int getHight(int);
 	int getDist(int);

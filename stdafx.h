@@ -33,7 +33,7 @@ struct poleData
 // Nural net
 struct element
 {
-	int value;
+	double value;
 	int link;
 };
 
@@ -43,4 +43,6 @@ struct net
 	element input[INPUTS];
 	element weight1[INPUTS];
 	element bias1[INPUTS];
+
+	bool answer[INPUTS];
 };
